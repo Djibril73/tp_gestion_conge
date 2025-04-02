@@ -3,18 +3,300 @@
 
 {% block title %}Conge Development{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary: #0f172a;
+        --accent: #22c55e;
+        --background: #f8fafc;
+        --card: #ffffff;
+        --text: #1e293b;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
+
+    .navbar {
+        background-color: var(--card);
+        box-shadow: var(--shadow);
+        padding: 0.75rem 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .navbar-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .navbar-brand i {
+        font-size: 1.5rem;
+    }
+
+    .navbar-nav {
+        display: flex;
+        gap: 1.5rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .nav-link {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        padding: 0.5rem 0;
+        position: relative;
+        transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+        color: var(--primary);
+    }
+
+    .nav-link.active {
+        color: var(--primary);
+    }
+
+    .nav-link.active::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary);
+        border-radius: 2px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        transform: rotate(45deg);
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0 0 1rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-title .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--accent);
+        color: white;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        font-size: 1.25rem;
+    }
+
+    .hero-description {
+        font-size: 1.25rem;
+        margin: 0;
+        opacity: 0.9;
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card {
+        background-color: var(--card);
+        border-radius: 1rem;
+        box-shadow: var(--shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--border);
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .card-title i {
+        color: var(--primary);
+    }
+
+    .access-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .access-link {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem;
+        background-color: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .access-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        border-color: var(--primary);
+    }
+
+    .access-link i {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(37, 99, 235, 0.1);
+        color: var(--primary);
+        border-radius: 0.5rem;
+        margin-right: 1rem;
+        font-size: 1.25rem;
+        transition: all 0.2s;
+    }
+
+    .access-link:hover i {
+        background-color: var(--primary);
+        color: white;
+    }
+
+    .footer {
+        background-color: var(--card);
+        border-top: 1px solid var(--border);
+        padding: 2rem 1.5rem;
+        text-align: center;
+        color: var(--text-light);
+        margin-top: 3rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+
+        .hero-description {
+            font-size: 1rem;
+        }
+
+        .access-links {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block body %}
+<header class="navbar">
+    <a href="{{ path('app_home') }}" class="navbar-brand">
+        <i class="fas fa-calendar-check"></i>
+        Conge Development
+    </a>
+    <nav>
+        <ul class="navbar-nav">
+            <li><a href="{{ path('app_home') }}" class="nav-link active">Accueil</a></li>
+            <li><a href="{{ path('user') }}" class="nav-link">Utilisateurs</a></li>
+            <li><a href="{{ path('conge') }}" class="nav-link">Congés</a></li>
+        </ul>
+    </nav>
+</header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<main class="container">
+    <section class="hero-section">
+        <h1 class="hero-title">
+             {{ controller_name }}!
+            <span class="badge"><i class="fas fa-check"></i></span>
+        </h1>
+        <p class="hero-description">
+            Cette page gère les accès aux congés des utilisateurs.
+        </p>
+    </section>
 
-    <p>Cette page gère les accès aux congés des utilisateurs.</p>
-    
-    <h2>Liens d'accès</h2>
-    <ul>
-        <li><a href="{{ path('user') }}">User</a></li>
-        <li><a href="{{ path('conge') }}">Conge</a></li>
-               
-    </ul>
-</div>
+    <section class="card">
+        <h2 class="card-title">
+            <i class="fas fa-link"></i>
+            Liens d'accès
+        </h2>
+        <ul class="access-links">
+            <li>
+                <a href="{{ path('user') }}" class="access-link">
+                    <i class="fas fa-users"></i>
+                    <span>User</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ path('conge') }}" class="access-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Conge</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</main>
+
+<footer class="footer">
+    <p>&copy; {{ "now"|date("Y") }} Conge Development - Tous droits réservés</p>
+</footer>
 {% endblock %}

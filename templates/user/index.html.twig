@@ -3,15 +3,144 @@
 
 {% block title %}Afficher les utilisateurs{% endblock %}
 
+{% block stylesheets %}
+<style>
+    .user-card {
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        border: 1px solid #e2e8f0;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 2rem;
+    }
+    
+    .user-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    
+    .user-card-header {
+        background-color: rgba(37, 99, 235, 0.05);
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem 1.5rem;
+        border-top-left-radius: 0.75rem;
+        border-top-right-radius: 0.75rem;
+    }
+    
+    .user-card-title {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .user-card-title i {
+        color: #2563eb;
+    }
+    
+    .user-card-body {
+        padding: 1.5rem;
+    }
+    
+    .user-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .user-item {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.2s;
+    }
+    
+    .user-item:hover {
+        border-color: #2563eb;
+        background-color: rgba(37, 99, 235, 0.02);
+    }
+    
+    .user-avatar {
+        width: 3rem;
+        height: 3rem;
+        background-color: rgba(37, 99, 235, 0.1);
+        color: #2563eb;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+    
+    .user-name {
+        font-weight: 500;
+        color: #1e293b;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .section-title i {
+        color: #2563eb;
+    }
+    
+    .alert {
+        border-radius: 0.75rem;
+        padding: 1.25rem;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
-<h1>Liste des utilisateurs</h1>
-
-<ul>
-    {% for user in users %}
-        <li>{{ user.nom }}</li>
-    {% else %}
-        <li>Aucun utilisateur trouvé.</li>
-    {% endfor %}
-</ul>
-
+<div class="container">
+    <h1 class="section-title">
+        <i class="fas fa-users"></i>
+        Liste des utilisateurs
+    </h1>
+    
+    <div class="user-card">
+        <div class="user-card-header">
+            <h2 class="user-card-title">
+                <i class="fas fa-user-friends"></i>
+                Utilisateurs enregistrés
+            </h2>
+        </div>
+        <div class="user-card-body">
+            {% if users is not empty %}
+                <ul class="user-list">
+                    {% for user in users %}
+                        <li class="user-item">
+                            <div class="user-avatar">
+                                {{ user.nom|first }}
+                            </div>
+                            <div class="user-name">{{ user.nom }}</div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-warning text-center" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Aucun utilisateur trouvé.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

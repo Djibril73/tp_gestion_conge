@@ -1,0 +1,292 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des congés{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .admin-header {
+        background-color: #0f172a;
+        color: white;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-radius: 0.5rem;
+    }
+    
+    .admin-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .admin-nav {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .admin-nav-link {
+        padding: 0.75rem 1.5rem;
+        background-color: white;
+        border-radius: 0.375rem;
+        color: #0f172a;
+        text-decoration: none;
+        font-weight: 500;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+    }
+    
+    .admin-nav-link:hover {
+        background-color: #f8fafc;
+        transform: translateY(-2px);
+    }
+    
+    .admin-nav-link.active {
+        background-color: #2563eb;
+        color: white;
+    }
+    
+    .conges-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .conges-table th {
+        background-color: #f8fafc;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #0f172a;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .conges-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .conges-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    .status-pending {
+        background-color: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    
+    .status-approved {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+    
+    .status-rejected {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+    
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.375rem;
+        background-color: transparent;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+        transition: all 0.2s;
+    }
+    
+    .action-btn:hover {
+        background-color: #f8fafc;
+        color: #0f172a;
+    }
+    
+    .action-btn-approve {
+        color: #10b981;
+        border-color: rgba(16, 185, 129, 0.2);
+    }
+    
+    .action-btn-approve:hover {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+    
+    .action-btn-reject {
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.2);
+    }
+    
+    .action-btn-reject:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+    
+    .filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.375rem;
+        background-color: white;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .filter-btn.active {
+        background-color: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+    
+    .alert {
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .alert-success {
+        background-color: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="admin-header">
+        <h1 class="admin-title">Gestion des congés</h1>
+    </div>
+    
+    <div class="admin-nav">
+        <a href="{{ path('admin_dashboard') }}" class="admin-nav-link">
+            <i class="fas fa-tachometer-alt me-2"></i> Tableau de bord
+        </a>
+        <a href="{{ path('admin_conges') }}" class="admin-nav-link active">
+            <i class="fas fa-calendar-alt me-2"></i> Gestion des congés
+        </a>
+        <a href="{{ path('admin_users') }}" class="admin-nav-link">
+            <i class="fas fa-users me-2"></i> Gestion des utilisateurs
+        </a>
+    </div>
+    
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle me-2"></i> {{ message }}
+        </div>
+    {% endfor %}
+    
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">Tous</button>
+        <button class="filter-btn" data-filter="pending">En attente</button>
+        <button class="filter-btn" data-filter="approved">Approuvés</button>
+        <button class="filter-btn" data-filter="rejected">Refusés</button>
+    </div>
+    
+    <div class="table-responsive">
+        <table class="conges-table">
+            <thead>
+                <tr>
+                    <th>Employé</th>
+                    <th>Type</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for conge in conges %}
+                    <tr class="conge-row" data-status="{{ conge.statut }}">
+                        <td>{{ conge.user.prenom }} {{ conge.user.nom }}</td>
+                        <td>{{ conge.type }}</td>
+                        <td>{{ conge.dateDebut|date('d/m/Y') }}</td>
+                        <td>{{ conge.dateFin|date('d/m/Y') }}</td>
+                        <td>
+                            {% if conge.statut == 'en_attente' %}
+                                <span class="status-badge status-pending">En attente</span>
+                            {% elseif conge.statut == 'approuve' %}
+                                <span class="status-badge status-approved">Approuvé</span>
+                            {% elseif conge.statut == 'refuse' %}
+                                <span class="status-badge status-rejected">Refusé</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a href="{{ path('admin_conge_edit', {'id': conge.id}) }}" class="action-btn" title="Modifier">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                {% if conge.statut == 'en_attente' %}
+                                    <a href="{{ path('admin_conge_approve', {'id': conge.id}) }}" class="action-btn action-btn-approve" title="Approuver">
+                                        <i class="fas fa-check"></i>
+                                    </a>
+                                    <a href="{{ path('admin_conge_reject', {'id': conge.id}) }}" class="action-btn action-btn-reject" title="Refuser">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block javascripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const congeRows = document.querySelectorAll('.conge-row');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const filter = this.getAttribute('data-filter');
+                
+                // Show/hide rows based on filter
+                congeRows.forEach(row => {
+                    const status = row.getAttribute('data-status');
+                    
+                    if (filter === 'all') {
+                        row.style.display = '';
+                    } else if (filter === 'pending' && status === 'en_attente') {
+                        row.style.display = '';
+                    } else if (filter === 'approved' && status === 'approuve') {
+                        row.style.display = '';
+                    } else if (filter === 'rejected' && status === 'refuse') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}
